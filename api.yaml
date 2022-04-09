@@ -1,0 +1,556 @@
+openapi: 3.0.0
+info:
+  title: Quantified Self
+  description: >
+    <div>Rollno: 21f1001878
+    </div>
+
+    <h3> user Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>username</td>
+        <td>String</td>
+        <td>Primary Key, Not Null</td>
+      </tr>
+      <tr>
+        <td>password</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>        
+    </tbody>
+    </table>
+
+    <h3> tracker Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>id</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>description</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>      
+      <tr>
+        <td>type</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>  
+      <tr>
+        <td>settings</td>
+        <td>String</td>
+        <td></td>
+      </tr> 
+      <tr>
+        <td>last</td>
+        <td>String</td>
+        <td>Default("Never")</td>
+      </tr>  
+      <tr>
+        <td>user</td>
+        <td>String</td>
+        <td>Foreign Key(user.username), Not Null</td>
+      </tr>  
+    </tbody>
+    </table>
+
+
+    <h3> log Table Schema </h3> 
+    <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>id</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>timestamp</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>tracker</td>
+        <td>String</td>
+        <td>Foreign Key (tracker.name), Not Null</td>
+        </tr>
+        <tr>
+        <td>value</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>note</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>user</td>
+        <td>String</td>
+        <td>Foreign Key(user.username),Not Null</td>
+      </tr>
+      <tr>
+        <td>trackerid</td>
+        <td>Integer</td>
+        <td>Foreign Key(tracker.id), Not Null</td>
+      </tr>
+    </tbody>
+    </table>
+
+    
+
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /home/{username}:
+    get:
+      description: Read all the trackers of the user.
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: Tracker Object Array
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Running
+                    description:
+                      type: string
+                      example: Tracking my daily jogging
+                    type:
+                      type: string
+                      example: Numerical
+                    settings:
+                      type: string
+                      example: none
+                    last:
+                      type: string
+                      example: Never
+                    user:
+                      type: string
+                      example: test1234       
+                  
+        '500':
+          description: Internal Server Error
+        '404':
+          description: Tracker not found
+
+    
+  /:
+    get:
+      description: Operation to login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usernmae:
+                  type: string
+                  example: test1234
+                password:
+                  type: string
+                  example: test1234
+      responses:
+        '200':
+          description: Successfully Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: test
+                  username:
+                    type: string
+                    example: test1234
+                  password:
+                    type: string
+                    example: test1234
+                 
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+
+  /{username}/tracker:
+    post:
+      description: Operation to add new tracker for the username
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Running
+                descripition:
+                  type: string
+                  example: Tracking my daily jogging.
+                type:
+                  type: string
+                  example: Numerical
+                settings:
+                  type: string
+                  example: "null"
+                user:
+                  type: string
+                  example: test1234
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Running
+                  descripition:
+                    type: string
+                    example: Tracking my daily jogging.
+                  type:
+                    type: string
+                    example: Numerical
+                  settings:
+                    type: string
+                    example: "null"
+                  user:
+                    type: string
+                    example: test1234
+                 
+        '500':
+          description: Internal Server Error
+        '400':
+          description: Bad request
+    
+  /{username}/tracker/{tracker_id}:
+    get:
+      description: Operation to Read Logs for the Tracker.
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+        - in: path
+          name: tracker_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: Log Object Array
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    timestamp:
+                      type: string
+                      example: 2022-03-15T03:15PM
+                    tracker:
+                      type: string
+                      example: Running
+                    value:
+                      type: string
+                      example: "5"
+                    note:
+                      type: string
+                      example: It was good experience :)
+                    user:
+                      type: string
+                      example: test1234
+                    tracker_id:
+                      type: integer
+                      example: 1   
+                  
+        '500':
+          description: Internal Server Error
+        '404':
+          description: Tracker not found
+          
+          
+  /{username}/{id}/log:
+    put:
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                when:
+                  type: string
+                  example: 2022-03-15T03:15PM
+                value:
+                  type: string
+                  example: "15"
+                note:
+                  type: string
+                  example: Feeling exhaused
+                  
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  when:
+                    type: string
+                    example: 2022-03-15T03:15PM
+                  value:
+                    type: string
+                    example: "15"
+                  note:
+                    type: string
+                    example: Feeling exhaused
+        '500':
+          description: Internal Server Error
+
+    
+
+  /signup:
+    description: To create new user account
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Test
+                username:
+                  type: string
+                  example: test1234
+                password:
+                  type: string
+                  example: test1234
+      responses:
+        '200':
+          description: Successfully deleted
+        '500':
+          description: Internal Server Error
+          
+  /{username}/tracker/edit/{id}:
+    put:
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Tracking my daily jogging
+                type:
+                  type: string
+                  example: Numerical
+                settings:
+                  type: string
+                  example: "null"
+                  
+      responses:
+        '200':
+          description: Request Successful
+        '500':
+          description: Internal Server Error
+   
+  /{username}/tracker/delete/{id}:
+    delete:
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Tracking my daily jogging
+                type:
+                  type: string
+                  example: Numerical
+                settings:
+                  type: string
+                  example: "null"
+                  
+      responses:
+        '200':
+          description: Request Successful
+        '500':
+          description: Internal Server Error
+          
+  /{username}/log/edit/{id}/:
+    put:
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                when:
+                  type: string
+                  example: 2022-03-15T03:15PM
+                value:
+                  type: string
+                  example: "15"
+                notes:
+                  type: string
+                  example: Tired :(
+                  
+      responses:
+        '200':
+          description: Request Successful
+        '500':
+          description: Internal Server Error
+  /{username}/log/delete/{id}:
+    delete:
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: test1234
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Tracking my daily jogging
+                type:
+                  type: string
+                  example: Numerical
+                settings:
+                  type: string
+                  example: "null"
+                  
+      responses:
+        '200':
+          description: Request Successful
+        
+        '500':
+          description: Internal Server Error
