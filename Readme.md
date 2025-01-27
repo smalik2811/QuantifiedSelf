@@ -8,7 +8,7 @@ In today's fast-paced world, keeping track of various aspects of our lives can b
 
 ## Demo Video
 
-[![Watch the App Demo Here](./.github-assets/Login.png)](./.github-assets/AppRecording.mp4)
+https://github.com/user-attachments/assets/3e1d5c3c-bfc2-446d-a675-2ebdfad4d8cc
 
 ## Project Structure
 
@@ -128,4 +128,4 @@ While this code is publicly available on GitHub, it is intended for viewing and 
 
 ## Contact
 
-For any inquiries, please contact [smalik2811](mailto:smalik2811@gmail.com).
+For any inquiries, please contact [Sonu](mailto:smalik2811@gmail.com).
